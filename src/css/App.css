@@ -1,0 +1,81 @@
+.App {
+  display:flex;
+  justify-content: space-between;
+  text-align: center;
+  height: 100vh;
+  color: #fffaf0;
+  width: 100%;
+  
+}
+
+body{
+  overflow-y: hidden;
+}
+
+.App__search{
+  width:35%;
+  z-index: 2;
+  box-shadow: 3px 1px 7px -1px rgba(74,70,74,0.8);
+  padding: 20px 20px;
+  overflow-y: scroll;
+}
+.App__map{
+  width: 65%;
+}
+.Cards{
+  padding-top: 5vh;
+}
+.card{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+form{
+  display: flex;
+  justify-content: center;  
+  align-items: center;
+  margin: 30px;
+}
+.m-0{
+  padding: 0;
+  margin: 0;
+}
+.card-action{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding:0;
+  padding-bottom: 200px;
+}
+
+.map__map{
+  width: 100%;
+  height: 100%;
+  background:#AADAFF;
+}
+.logo_img{
+  align-content:center;
+  display:flex;
+}
+.logo_img img{
+  box-flex: 1;
+  max-height:1.2em;
+  margin: 0 5px
+}
+.flex{
+  display:flex
+}
+.rating{
+  align-self:flex-end;
+}
+.gm-style-iw-d{
+  color: black;
+}
+@media screen and (max-width:768px){
+  .App__map{
+    display: none;
+  }
+  .App__search{
+    width: 100%;
+  }
+}
