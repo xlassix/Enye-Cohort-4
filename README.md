@@ -15,8 +15,7 @@ These following technologies must be used when building this application
 - Choose one of the following Component Libraries
     - [AntD](https://ant.design/docs/react/introduce)
     - [Material Design](https://material-ui.com/)
-
-*You are allowed to use any additional piece of technology that you believe will help you complete this challenge. Just make sure that you are using the ones listed above.*
+- [FireStore](https://firebase.google.com/docs/firestore)
 
 ### Application Requirements
 
@@ -29,10 +28,17 @@ These following technologies must be used when building this application
 - The code must be completely written in **[Typescript](https://www.typescriptlang.org/)**
 - The application must be **deployed**
     - (i.e - Firebase, Heroku, AWS, GCP, DigitalOcean, etc...)
+- Users should be able to search for Hospitals, Pharmacies, Clinics and Medical Offices
+- Users should be able to see past results
+    - There should be a place that a user can click to see all the results that have been searched on the app
+    - Clicking on a past search result should trigger a request and the results should be displayed for the user.
+    - Hint - You need to save the past searches in a database
 
 ### Judgement Criteria
 
 - The application must meet all criterias described in the above requirements and use the technologies specified
 - We are looking for well-designed user interfaces meaning your application should be visually pleasing.
     - (Hint - Use the component libraries)
+- The design and usability of the application
+    - Leverage [dribble](https://dribbble.com/) for design inspiration
 - The application should be **bug free**
