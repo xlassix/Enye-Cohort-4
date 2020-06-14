@@ -89,6 +89,12 @@ form{
   z-index: 4;
   background-color:white;
   outline: none;
+  -webkit-box-shadow: 5px 3px 12px 1px rgba(0,0,0,0.62);
+  -moz-box-shadow: 5px 3px 12px 1px rgba(0,0,0,0.62);
+  box-shadow: 5px 3px 12px 1px rgba(0,0,0,0.62);
+}
+.history div,.history .ant-list-header  {
+  border: none;
 }
 .history ul{
   max-height: 200px;
@@ -108,6 +114,9 @@ form{
   }
   .App__search{
     width: 100%;
+  }
+  .history{
+    position: unset;
   }
 }
 /* .scroll {

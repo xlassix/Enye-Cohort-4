@@ -47,7 +47,7 @@ function HistoryBox({ ListItemClick }: Props){
     }
     useEffect(() => {
       setLoading(true);
-      setTimeout(() => {  setLoading(false); },1000);
+      setTimeout(() => {  setLoading(false); },1800);
     }, []);
     const data=useSelector((state:LooseObject)=>{return(state.history.data)})
 

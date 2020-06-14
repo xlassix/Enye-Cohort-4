@@ -1,8 +1,8 @@
 import React from 'react';
-import './css/App.css';
 import SearchComponent from "./components/search"
 import Map from "./components/map"
 import 'antd/dist/antd.css';
+import './css/App.css';
 
 
 function App() {
