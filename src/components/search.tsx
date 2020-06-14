@@ -101,7 +101,7 @@ const SearchComponent= ()=>{
     dispatch(updateHistory({data:{query:query_loc,radius:radius_loc}}))
 
     // Types for Entity
-    const loc_types =['pharmacy',"hospital"];
+    const loc_types =['pharmacy',"hospital",'doctor','drugstore'];
     var cache:string[]= [];
 
     // initialise library
