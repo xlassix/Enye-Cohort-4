@@ -15,6 +15,7 @@ declare module window {
   const google: any;
   const map:any;
   const infowindow: any;
+  const innerWidth: number;
 }
 
 //hospital icon
@@ -93,9 +94,9 @@ const SearchComponent= ()=>{
         success("written to firestore")
         console.log("Document written with ID: ", docRef.id);
     })
-    .catch(function(error) {
-        error("Error adding document: "+ error)
-        console.error("Error adding document: ", error);
+    .catch(function(err) {
+        error("Error adding document: "+ err)
+        console.error("Error adding document: ", err);
     });
     dispatch(updateHistory({data:{query:query_loc,radius:radius_loc}}))
 
@@ -258,6 +259,7 @@ const SearchComponent= ()=>{
                 <Button type="primary"  htmlType="submit" icon={<SearchOutlined  style={{ fontSize: 16}}/>}></Button>
               </Form.Item>
             </Form>
+            { Math.max(document.documentElement.clientWidth, window.innerWidth || 0)<798?<HistoryBox ListItemClick={HistoryClick} />:null}
             <div className="Cards">
                   {loading? [<h2>{hospital} Finding health facilities near you.</h2>]:
                   history.length===0? [<h2>{hospital} Find Health facilities near you.</h2>]:
@@ -265,7 +267,7 @@ const SearchComponent= ()=>{
                   <CardBox CardClick={mapClick} data={results_loc} /> }
             </div>
         </Spin>
-        <HistoryBox ListItemClick={HistoryClick} />
+        { Math.max(document.documentElement.clientWidth, window.innerWidth || 0)>798?<HistoryBox ListItemClick={HistoryClick} />:null}
       </div>
     );
 }
