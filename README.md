@@ -4,7 +4,7 @@ In this COVID world that we live in, it is important that people can easily acce
 Design Inspiration
 [Web version of digital map](https://dribbble.com/shots/9146913-Web-version-of-digital-map) by Alex Arutuynov 
 
-[![Web version of digital map](https://cdn.dribbble.com/users/551602/screenshots/9146913/media/f2ee67967ffd61afa6c86a132dd55e16.png "Web version of digital map")
+[Web version of digital map](https://cdn.dribbble.com/users/551602/screenshots/9146913/media/f2ee67967ffd61afa6c86a132dd55e16.png "Web version of digital map")
 ### Technologies
 
 These following technologies must be used when building this application
