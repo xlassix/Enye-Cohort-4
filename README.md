@@ -1,5 +1,10 @@
 # Enye-Cohort-4
 In this COVID world that we live in, it is important that people can easily access medical assistance if need be. With that in mind, the goal of this challenge is to build an application that can locate all the hospitals within a given area.
+
+Design Inspiration
+[Web version of digital map](https://dribbble.com/shots/9146913-Web-version-of-digital-map) by Alex Arutuynov 
+
+[![Web version of digital map](https://cdn.dribbble.com/users/551602/screenshots/9146913/media/f2ee67967ffd61afa6c86a132dd55e16.png "Web version of digital map")
 ### Technologies
 
 These following technologies must be used when building this application
