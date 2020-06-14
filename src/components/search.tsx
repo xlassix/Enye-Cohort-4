@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import { Input,AutoComplete,Form,Button,Spin} from 'antd';
-import CardComponent from './card'
+import CardBox from './layouts/cardBox'
 import {SearchOutlined,BankOutlined } from '@ant-design/icons';
 
 interface Values {
@@ -119,6 +119,7 @@ const SearchComponent= ()=>{
         return function(){
           infoWindow.setContent(place.name)
           infoWindow.open(map,marker)
+          map.setCenter(marker.getPosition());
         }
       })(marker));
       new window.google.maps.event.addListener(map, 'click', (function() {
@@ -131,16 +132,17 @@ const SearchComponent= ()=>{
       return marker
     }
 
-
-    const mapClick=(place:LooseObject)=>{
+    //onCard Click
+    const mapClick=(id:Number)=>{
       var infoWindow = new window.google.maps.InfoWindow();
       if (infoWindow) {
         infoWindow.close();
       }
-      let current:LooseObject = markers_loc.filter((marker)=>{return marker.id===place.id});
+      let current:LooseObject = markers_loc.filter((marker:any)=>{return marker.id===id});
       window.google.maps.event.trigger(current[0], 'click');
     }
 
+    //handle Geoloaction Errors
     function errorHandler(err:any) {
         if(err.code === 1) {
            alert("Error: Access is denied!");
@@ -148,6 +150,8 @@ const SearchComponent= ()=>{
            alert("Error: Position is unavailable!");
         }
      }
+
+     //get location from browser
      function getLocation(){
         if(navigator.geolocation){
            // timeout at 60000 milliseconds (60 seconds)
@@ -172,15 +176,9 @@ const SearchComponent= ()=>{
       }
     }
 
-  const items = [<h3> {hospital} Hospitals</h3>]
-    for (const value in Object.keys(store)) {
-      items.push(
-        <div onClick={()=>mapClick(store[value])}>
-            <CardComponent data={store[value]} key={value}/>
-        </div>
-      )
-    }
+
     return (
+      <div  className="perfect_scroll">
         <Spin tip="Loading..." spinning={loading} >
           <Form onFinish={handleSubmit} name="form">
             <Form.Item
@@ -215,9 +213,10 @@ const SearchComponent= ()=>{
               </Form.Item>
                 </Form>
             <div className="Cards">
-                  {loading? [<h2>{hospital} Finding hospitals near you.</h2>]:history.length===0? [<h2>{hospital} Find hospitals near you.</h2>]:items.length===1? [<h2>{hospital}No Hospitals found</h2>]: items }
+                  {loading? [<h2>{hospital} Finding hospitals near you.</h2>]:history.length===0? [<h2>{hospital} Find hospitals near you.</h2>]:store.length===0? [<h2>{hospital}No Hospitals found</h2>]: <CardBox CardClick={mapClick} data={store} /> }
             </div>
         </Spin>
+      </div>
     );
 }
 export default SearchComponent

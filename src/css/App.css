@@ -18,6 +18,7 @@ body{
   box-shadow: 3px 1px 7px -1px rgba(74,70,74,0.8);
   padding: 20px 20px;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 .App__map{
   width: 65%;
@@ -29,6 +30,13 @@ body{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  cursor: pointer;
+}
+.card div p{
+  text-align: left;
+}
+.card div {
+  display: flex;
 }
 form{
   display: flex;
@@ -79,3 +87,21 @@ form{
     width: 100%;
   }
 }
+
+.perfect_scroll::-webkit-scrollbar-track
+ {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+ }
+ 
+ .perfect_scroll::-webkit-scrollbar
+ {
+  width: 4px;
+  background-color: transparent;
+}
+ 
+.perfect_scroll::-webkit-scrollbar-thumb
+ {
+   background-color: rgb(136, 136, 153);
+ }
