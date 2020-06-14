@@ -1,13 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './css/index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { historyReducer } from './store/history/reducer'
+import { searchReducer} from './store/data/reducer'
+import {Provider} from 'react-redux'
+import { createStore,combineReducers } from 'redux'
+
+const rootReducer = combineReducers({
+  history: historyReducer,
+  search: searchReducer
+})
+
+const store = createStore(rootReducer)
+
+export type RootState = ReturnType<typeof rootReducer>
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>,
+  </Provider>,
   document.getElementById('root')
 );
 
