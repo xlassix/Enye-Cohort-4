@@ -8,7 +8,7 @@ import 'antd/dist/antd.css';
 function App() {
   return (
     <div className="App">
-      <div className="App__search">
+      <div className="App__search perfect_scroll">
         <SearchComponent />
       </div>
       <div className="App__map">

@@ -1,20 +1,16 @@
 import React,{useState} from "react";
-import { Input,AutoComplete,Form,Button,Spin} from 'antd';
-import CardComponent from './card'
+import { Input,AutoComplete,Form,Button,Spin,message} from 'antd';
+import CardBox from './layouts/cardBox'
 import {SearchOutlined,BankOutlined } from '@ant-design/icons';
-
-interface Values {
-  distance?: number;
-  location?: string;
-}
+import db from '../store/config'
+import HistoryBox from "./layouts/historyBox"
+import { useDispatch,useSelector } from "react-redux"
+import { updateHistory } from "../store/history/actions"
+import { updateResults,clearResult } from "../store/data/actions"
 interface LooseObject {
   [key: string]: any
 }
 
-interface PriceInputProps {
-  value?: Values;
-  onChange?: (value: Values) => void;
-}
 declare module window {
   const google: any;
   const map:any;
@@ -32,35 +28,47 @@ const hospital = (
   />
 );
 
+const success = (info:string) => {
+ message.success(info, 1.5);
+};
+const error = (info:string) => {
+  message.error(info, 1.5);
+ };
+ 
+
 const SearchComponent= ()=>{
 
   //states  and variable declaration
   const {Option} =AutoComplete;
   const [result, setResult] = useState<string[]>([]);
-  const [store, setStore] = useState<object[]>([]);
-  const [distance, setDistance] = useState<number>(0);
+  const [radius_loc, setRadius] = useState<number>(0);
   const [query_loc, setQuery] = useState<String>('');
-  const [history, setHistory]= useState<string[]>([]);
   const [loading,setLoading]=useState<boolean>(false);
   var map:any;
-  const [markers_loc,setMarkers] =useState<Array<LooseObject>>([]);
   var markers:Array<LooseObject>=[]
-  var placesService;
+  var placesService:any;
   var longitude:number;
   var latitude:number;
+  const [form] = Form.useForm();
 
-
+  //initialise dispatcher
+  const dispatch = useDispatch();
+  const history=useSelector((state:LooseObject)=>{return(state.history.data)})
+  const {results_loc,markers_loc}=useSelector((state:LooseObject)=>{return(state.search)})
 
   //handle search in autocomplete field
   const handleSearch = (value: string) => {
-      let res: string[] = history;
+      let temp = new Set(history.map((x:LooseObject)=>{return (x.query)}))
+      ;
+      let res: any[] =Array.from(temp);
       if (value ) {
         res = res.filter((domain:string) => domain.includes(value));
       }
       setResult(res);
     };
 
-    
+
+  
   function findHospitals(position: any){
 
     //get latitute and longitude
@@ -76,35 +84,63 @@ const SearchComponent= ()=>{
       zoom: 15
     });
 
-    // create request object
-    const placesRequest = {
-      location:  current_loc,
+    //Store entity Firebase
+    db.collection("history").add({
       query: query_loc,
-      radius: distance,
-      type: ["hospital"],
-    };
+      radius: radius_loc,
+    })
+    .then(function(docRef) {
+        success("written to firestore")
+        console.log("Document written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+        error("Error adding document: "+ error)
+        console.error("Error adding document: ", error);
+    });
+    dispatch(updateHistory({data:{query:query_loc,radius:radius_loc}}))
+
+    // Types for Entity
+    const loc_types =['pharmacy',"hospital"];
+    var cache:string[]= [];
 
     // initialise library
     placesService = new window.google.maps.places.PlacesService(map);
 
-    //request
-    placesService.nearbySearch(placesRequest, function (results:any, status:any) {
-      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-        results=results.filter((domain:LooseObject) =>{ 
-          return( domain.name.toLowerCase().includes(query_loc.toLowerCase())||(domain.formatted_address? domain.formatted_address.toLowerCase().includes(query_loc.toLowerCase()):false )||(domain.vicinity? domain.vicinity.toLowerCase().includes(query_loc.toLowerCase()):false ))})
-        for (var i = 0; i < results.length; i++) {
-          markers[i]=createMarker(results[i],map);
-          markers[i].id=i;
-          results[i].id=i;
-        }
-      }
 
-      //update state
-      setStore(results)
-      setMarkers(markers)
+    loc_types.forEach( loc_type=>{
+      // create request object
+      const placesRequest = {
+        location:  current_loc,
+        query: query_loc,
+        radius: radius_loc,
+        type: [loc_type],//'pharmacy']//'drugstore']//,'health',"pharmacy",'doctor','drugstore','pharmacy']
+      };
+
+      //request
+      placesService.nearbySearch(placesRequest, function (results:any, status:any) {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+          results=results.filter((domain:LooseObject) =>{ 
+            if(domain.place_id in cache){
+              return (false);
+            }
+            if( domain.name.toLowerCase().includes(query_loc.toLowerCase())||(domain.formatted_address? domain.formatted_address.toLowerCase().includes(query_loc.toLowerCase()):false )||(domain.vicinity? domain.vicinity.toLowerCase().includes(query_loc.toLowerCase()):false )){
+              cache.push(domain.place_id)
+              return (true);
+            }
+            return (false)
+          })
+          for (var i = 0; i < results.length; i++) {
+            markers[i]=createMarker(results[i],map);
+            markers[i].placeResult=results[i]
+            markers[i].id=i;
+            results[i].id=i;
+          }
+          dispatch(updateResults({markers_loc:markers,results_loc:results}))
+        }
+      });
     });
     //update state
-    setTimeout(() => {  setLoading(false); },2000);
+    setTimeout(() => {  setLoading(false); },1000);
     }
 
     //createMarket
@@ -119,6 +155,7 @@ const SearchComponent= ()=>{
         return function(){
           infoWindow.setContent(place.name)
           infoWindow.open(map,marker)
+          map.setCenter(marker.getPosition());
         }
       })(marker));
       new window.google.maps.event.addListener(map, 'click', (function() {
@@ -132,12 +169,13 @@ const SearchComponent= ()=>{
     }
 
 
-    const mapClick=(place:LooseObject)=>{
+    //onCard Click
+    const mapClick=(id:Number)=>{
       var infoWindow = new window.google.maps.InfoWindow();
       if (infoWindow) {
         infoWindow.close();
       }
-      let current:LooseObject = markers_loc.filter((marker)=>{return marker.id===place.id});
+      let current:LooseObject = markers_loc.filter((marker:any)=>{return marker.id===id});
       window.google.maps.event.trigger(current[0], 'click');
     }
 
@@ -159,30 +197,37 @@ const SearchComponent= ()=>{
         }
      }
 
+     //onForm Submit
      const handleSubmit = (values:LooseObject) => {
-       setLoading(true)
-       setHistory([...history,values.query])
-       setTimeout(() => {  getLocation(); },2500);
+      dispatch(clearResult())
+      setLoading(true)
+      getLocation();
     };
+
+    //Update form State values
     const handleChange=(event:any)=>{
       if (typeof event.target === "undefined"){
         setQuery(event)
       }else{
-        setDistance(parseInt(event.target.value))
+        setRadius(parseInt(event.target.value))
       }
     }
 
-  const items = [<h3> {hospital} Hospitals</h3>]
-    for (const value in Object.keys(store)) {
-      items.push(
-        <div onClick={()=>mapClick(store[value])}>
-            <CardComponent data={store[value]} key={value}/>
-        </div>
-      )
+    //Onhistory click
+    const HistoryClick=(object:LooseObject)=>{
+      setRadius(object.radius)
+      setQuery(object.query)
+      form.setFieldsValue({
+        query: object.query,
+        radius: object.radius,
+      });
+      form.submit()
+      //form.resetFields();
     }
     return (
+      <div>
         <Spin tip="Loading..." spinning={loading} >
-          <Form onFinish={handleSubmit} name="form">
+          <Form onFinish={handleSubmit} name="form" form={form}>
             <Form.Item
                 name="query"
                 rules={[{ required: true, message: 'Please input Name' }]}
@@ -203,7 +248,6 @@ const SearchComponent= ()=>{
                 <Input
                       max={50000}
                       min={0}
-                      name="radius"
                       onChange={handleChange}
                       type="number"
                       placeholder="radius"
@@ -211,13 +255,18 @@ const SearchComponent= ()=>{
                       />
               </Form.Item>
               <Form.Item>
-                  <Button type="primary"  htmlType="submit" icon={<SearchOutlined  style={{ fontSize: 16}}/>}></Button>
+                <Button type="primary"  htmlType="submit" icon={<SearchOutlined  style={{ fontSize: 16}}/>}></Button>
               </Form.Item>
-                </Form>
+            </Form>
             <div className="Cards">
-                  {loading? [<h2>{hospital} Finding hospitals near you.</h2>]:history.length===0? [<h2>{hospital} Find hospitals near you.</h2>]:items.length===1? [<h2>{hospital}No Hospitals found</h2>]: items }
+                  {loading? [<h2>{hospital} Finding health facilities near you.</h2>]:
+                  history.length===0? [<h2>{hospital} Find Health facilities near you.</h2>]:
+                  results_loc.length===0? [<h2>{hospital}No health facilities found</h2>]: 
+                  <CardBox CardClick={mapClick} data={results_loc} /> }
             </div>
         </Spin>
+        <HistoryBox ListItemClick={HistoryClick} />
+      </div>
     );
 }
 export default SearchComponent
