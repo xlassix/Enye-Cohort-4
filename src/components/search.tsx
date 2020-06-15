@@ -2,11 +2,12 @@ import React,{useState} from "react";
 import { Input,AutoComplete,Form,Button,Spin,message} from 'antd';
 import CardBox from './layouts/cardBox'
 import {SearchOutlined,BankOutlined } from '@ant-design/icons';
-import db from '../store/config'
+import  {db} from '../firebase/config'
 import HistoryBox from "./layouts/historyBox"
 import { useDispatch,useSelector } from "react-redux"
 import { updateHistory } from "../store/history/actions"
 import { updateResults,clearResult } from "../store/data/actions"
+import withAuthentication from "../firebase/auth"
 interface LooseObject {
   [key: string]: any
 }
@@ -141,7 +142,7 @@ const SearchComponent= ()=>{
       });
     });
     //update state
-    setTimeout(() => {  setLoading(false); },1000);
+    setTimeout(() => {  setLoading(false); },500);
     }
 
     //createMarket
@@ -226,9 +227,9 @@ const SearchComponent= ()=>{
       //form.resetFields();
     }
     return (
-      <div>
+      <div className="App__search perfect_scroll">
         <Spin tip="Loading..." spinning={loading} >
-          <Form onFinish={handleSubmit} name="form" form={form}>
+          <Form onFinish={handleSubmit} name="form" form={form} className='search_form'>
             <Form.Item
                 name="query"
                 rules={[{ required: true, message: 'Please input Name' }]}
@@ -271,4 +272,4 @@ const SearchComponent= ()=>{
       </div>
     );
 }
-export default SearchComponent
+export default withAuthentication(SearchComponent)
