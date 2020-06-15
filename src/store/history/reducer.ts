@@ -1,6 +1,6 @@
 import {HistoryState, UPDATE_HISTORY, HistoryActionTypes } from './types'
 import {message} from "antd"
-import db from "../config"
+import {db} from "../../firebase/config"
 const success = (info:string) => {
   message.success(info, 0.5);
  };

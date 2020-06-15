@@ -20,8 +20,16 @@ body{
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
+.accessform{
+  display: flex;
+  justify-content: center;  
+  align-items: center;
+  background-color: #AADAFF;
+}
 .App__map{
   width: 65%;
+  display: flex;
+  flex-direction: column;
 }
 .Cards{
   padding-top: 5vh;
@@ -40,7 +48,7 @@ body{
 }
 
 
-form{
+.search_form{
   display: flex;
   justify-content: center;  
   align-items: center;
@@ -201,4 +209,15 @@ form{
  .round{
    border-radius: 1.2em;
    transition: 600ms;
+ }
+ .accountform{
+   background-color: white;
+   padding: 1.6em 1.4em 1em;
+   border-radius: 0.2em;
+   transition: all;
+ }
+ .login-form-button{
+  -webkit-box-shadow: 2px 3px 12px -1px rgba(58,152,230,0.58);
+  -moz-box-shadow: 2px 3px 12px -1px rgba(58,152,230,0.58);
+  box-shadow: 2px 3px 12px -1px rgba(58,152,230,0.58);
  }
