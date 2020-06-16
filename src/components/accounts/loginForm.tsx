@@ -16,6 +16,7 @@ interface LooseObject {
 
 const LoginForm = () => {
 
+  //state and variable declarations
   const [pwdErrors, setPwdErrors] = useState<LooseObject>({ status: "", message: null })
   const [emailErrors, setEmailErrors] = useState<LooseObject>({ status: "", message: null })
   const [loading, setLoading] = useState<boolean>(false)
@@ -24,12 +25,14 @@ const LoginForm = () => {
   const dispatch = useDispatch();
 
 
+  //this reload this components to ensure sync with the firestore database
   useEffect(() => {
     if (pwdErrors.status !== "") {
       form.validateFields(['Email', "password"]);
     }
   }, [pwdErrors, emailErrors]);
 
+  //this handles Submit event for the login in form
   const onFinish = (values: LooseObject) => {
 
     setLoading(true)

@@ -6,10 +6,7 @@ import './css/App.css';
 import LoginForm from "./components/accounts/loginForm"
 import SignUpForm from "./components/accounts/signUpForm"
 import { ApolloProvider } from '@apollo/react-hooks';
-import {
-  BrowserRouter as Router,
-  Route,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import * as ROUTES from './routes/all'
 

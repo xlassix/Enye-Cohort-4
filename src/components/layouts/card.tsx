@@ -7,10 +7,12 @@ interface LooseObject {
     [key: string]: any
 }
 
+// props interface
 type CardProps = {
     data: LooseObject,
 }
 
+// location Icon
 const prefix = (
     <EnvironmentOutlined
         style={{
@@ -21,6 +23,7 @@ const prefix = (
     />
 );
 
+// Clock Icon
 const clock = (
     <ClockCircleOutlined 
         style={{
@@ -30,6 +33,7 @@ const clock = (
         }}
     />
 );
+
 function CardComponent({ data }: CardProps){
     const header = (
         <div className="logo_img">

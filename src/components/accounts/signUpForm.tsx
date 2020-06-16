@@ -27,7 +27,7 @@ const SignUpForm = () => {
   const dispatch = useDispatch();
 
 
-  //on submit
+  //Handle the  submit event for the SignUpForm
   const onFinish = (values: LooseObject) => {
     setLoading(true);
     auth.createUserWithEmailAndPassword(values.Email, values.password)
@@ -118,14 +118,14 @@ const SignUpForm = () => {
 
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ width: "100%" }} className="login-form-button">
-            Sign Up
+            Sign Up 
           <Spin indicator={antIcon} spinning={loading} />
           </Button>
         </Form.Item>
 
         <Form.Item>
           I have an account ?
-         <Link to={SIGN_IN}>Sign In!</Link>
+         <Link to={SIGN_IN}> Sign In!</Link>
         </Form.Item>
 
       </Form>
