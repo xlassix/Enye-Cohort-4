@@ -133,8 +133,8 @@ const SearchComponent= ()=>{
           for (var i = 0; i < results.length; i++) {
             markers[i]=createMarker(results[i],map);
             markers[i].placeResult=results[i]
-            markers[i].id=i;
-            results[i].id=i;
+            markers[i].id=loc_type+ i;
+            results[i].id=loc_type+ i;
           }
           dispatch(updateResults({markers_loc:markers,results_loc:results}))
         }
@@ -171,7 +171,7 @@ const SearchComponent= ()=>{
 
 
     //onCard Click
-    const mapClick=(id:Number)=>{
+    const mapClick=(id:string)=>{
       var infoWindow = new window.google.maps.InfoWindow();
       if (infoWindow) {
         infoWindow.close();
