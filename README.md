@@ -16,6 +16,8 @@ These following technologies must be used when building this application
     - [AntD](https://ant.design/docs/react/introduce)
     - [Material Design](https://material-ui.com/)
 - [FireStore](https://firebase.google.com/docs/firestore)
+- [FireAuth](https://firebase.google.com/docs/auth) or [Auth0](https://auth0.com/docs/quickstarts/)
+- [GraphQL](https://graphql.org/)
 
 ### Application Requirements
 
@@ -33,6 +35,16 @@ These following technologies must be used when building this application
     - There should be a place that a user can click to see all the results that have been searched on the app
     - Clicking on a past search result should trigger a request and the results should be displayed for the user.
     - Hint - You need to save the past searches in a database
+ **Authentication**
+
+- User should be able to signup for the application
+- User should be able to access the application using their email and password
+- User should only be allowed to access the application if they are signed in
+
+**GraphQL**
+
+- Build a GraphQL layer that pulls the users specific search results from your database or API
+- User should only see their own search history
 
 ### Judgement Criteria
 
