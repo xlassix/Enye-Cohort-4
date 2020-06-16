@@ -5,37 +5,37 @@ import 'antd/dist/antd.css';
 import './css/App.css';
 import LoginForm from "./components/accounts/loginForm"
 import SignUpForm from "./components/accounts/signUpForm"
+import { ApolloProvider } from '@apollo/react-hooks';
 import {
   BrowserRouter as Router,
   Route,
 } from 'react-router-dom';
- 
-
- 
+import ApolloClient from 'apollo-boost';
 import * as ROUTES from './routes/all'
+
+//initialise Apollo client
+const client = new ApolloClient({
+  uri: 'https://us-central1-clear-practice-251418.cloudfunctions.net/api/',
+});
+
 
 
 function App() {
   return (
     <div className="App">
-      {/* <div className="App__search perfect_scroll">
-        <SignUpForm />
-        <SearchComponent />  
-      </div>
-      <div className="App__map">
-        <Map />
-      </div> */}
-        <Router>
-        <Route  exact path={ROUTES.LANDING} component={SearchComponent} />
+      <Router>
+        <ApolloProvider client={client}>
+          <Route exact path={ROUTES.LANDING} component={SearchComponent} />
+        </ApolloProvider>
         <Route path={ROUTES.SIGN_UP} component={SignUpForm} />
         <Route path={ROUTES.SIGN_IN} component={LoginForm} />
 
-      <hr />
+        <hr />
 
-      <div className="App__map">
-        <Map />
-      </div>
-  </Router>
+        <div className="App__map">
+          <Map />
+        </div>
+      </Router>
     </div>
   );
 }
