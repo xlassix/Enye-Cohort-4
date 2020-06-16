@@ -1,12 +1,14 @@
-import React,{useState,useEffect} from "react"
-import { Form, Input, Button} from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import {auth} from "../../firebase/config"
+import React, { useState, useEffect } from "react"
+import { Form, Input, Button, Spin } from 'antd';
+import { UserOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
+import { auth } from "../../firebase/config"
 import { Link } from 'react-router-dom';
-import  {SIGN_UP} from '../../routes/all';
+import { SIGN_UP } from '../../routes/all';
 import { useHistory } from "react-router-dom";
-import {useDispatch} from "react-redux"
-import { updateUserState} from "../../store/user/actions"
+import { useDispatch } from "react-redux"
+import { updateUserState } from "../../store/user/actions"
+
+const antIcon = <LoadingOutlined style={{ fontSize: 24, color: 'white', margin: '0 5px' }} spin />
 
 interface LooseObject {
   [key: string]: any
@@ -14,43 +16,46 @@ interface LooseObject {
 
 const LoginForm = () => {
 
-  const [pwdErrors,setPwdErrors] =useState<LooseObject>({status:"",message:null})
-  const [emailErrors,setEmailErrors] =useState<LooseObject>({status:"",message:null})
+  const [pwdErrors, setPwdErrors] = useState<LooseObject>({ status: "", message: null })
+  const [emailErrors, setEmailErrors] = useState<LooseObject>({ status: "", message: null })
+  const [loading, setLoading] = useState<boolean>(false)
   const [form] = Form.useForm();
-  const history=useHistory();
-  const dispatch=useDispatch();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
 
   useEffect(() => {
-    if (pwdErrors.status!==""){
-    form.validateFields(['Email',"password"]);
+    if (pwdErrors.status !== "") {
+      form.validateFields(['Email', "password"]);
     }
-  }, [pwdErrors,emailErrors]);
+  }, [pwdErrors, emailErrors]);
 
-  const onFinish = (values:LooseObject) => {
-    console.log('Received values of form: ', values);
+  const onFinish = (values: LooseObject) => {
+
+    setLoading(true)
+
     auth.signInWithEmailAndPassword(values.Email, values.password)
-    .then(()=>{
-      dispatch(updateUserState({email:values.Email,logged_in:true}))
-      history.push("/")
-    })
-    .catch(function(error) {
-      if (error.code.includes("user")){
-        if (error.message==="There is no user record corresponding to this identifier. The user may have been deleted."){
-          console.log("not foun")
-          setEmailErrors({status:"error",message:"Email not found"})
-        }else{
-          setEmailErrors({status:"error",message:error.message})
+      .then((userInstance: any) => {
+        dispatch(updateUserState({ userId: userInstance.user.uid, logged_in: true,histories:[] }))
+        history.push("/")
+      })
+      .catch(function (error) {
+
+        if (error.code.includes("user")) {
+          if (error.message === "There is no user record corresponding to this identifier. The user may have been deleted.") {
+            setEmailErrors({ status: "error", message: "Email not found" })
+          } else {
+            setEmailErrors({ status: "error", message: error.message })
+          }
+        } else {
+          if (error.message === "The password is invalid or the user does not have a password.") {
+            setPwdErrors({ status: "error", message: "Invalid password" })
+          } else {
+            setPwdErrors({ status: "error", message: error.message })
+          }
         }
-      }else{
-        if (error.message==="The password is invalid or the user does not have a password."){
-          setPwdErrors({status:"error",message:"Invalid password"})
-        }else{
-          setPwdErrors({status:"error",message:error.message})
-        }
-      }
-      console.log(error)
-    });
+
+      }).then(() => setLoading(false));
   };
 
   return (
@@ -59,9 +64,10 @@ const LoginForm = () => {
         name="normal_login"
         className="accountform"
         initialValues={{ remember: true }}
-        onFinish={onFinish}
-      >
+        onFinish={onFinish}>
+
         <h2>Sign IN</h2>
+
         <Form.Item
           name="Email"
           help={emailErrors.message}
@@ -75,8 +81,7 @@ const LoginForm = () => {
               required: true,
               message: 'Please input your E-mail!',
             },
-          ]}
-        >
+          ]}>
           <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
         </Form.Item>
         <Form.Item
@@ -92,13 +97,14 @@ const LoginForm = () => {
           />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" style={{width:"100%"}}  className="login-form-button">
+          <Button type="primary" htmlType="submit" style={{ width: "100%" }} className="login-form-button">
             Log in
+            <Spin indicator={antIcon} spinning={loading} />
           </Button>
         </Form.Item>
         <Form.Item>
-        I dont have an account ?
-          <Link to={SIGN_UP}>Sign Up! </Link> 
+          I dont have an account ?
+          <Link to={SIGN_UP}>Sign Up! </Link>
         </Form.Item>
       </Form>
     </div>
