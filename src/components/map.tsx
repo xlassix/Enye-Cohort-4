@@ -23,7 +23,7 @@ const Map= ()=>{
             }));
         }
         const googleScript = document.createElement('script');
-        googleScript.src = "https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap";
+        googleScript.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDJGXzRI1DaiFN8auGsFuap4p4CBwxiiPA&libraries=places&callback=initMap";
         document.body.appendChild(googleScript)
         googleScript.addEventListener('error', ev => {
             console.warn("it blew up", ev)

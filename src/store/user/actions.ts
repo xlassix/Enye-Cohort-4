@@ -1,15 +1,14 @@
-import {UserState, UPDATE_USER_STATE,UPDATE_USER_HISTORY,UpdateUserHistoryAction,UpdateUserStateAction,LooseState} from './types'
+import {UserState, UPDATE_USER_STATE,RESET_USER,UserActionTypes} from './types'
 
-export function updateUserState(newObject: UserState): UpdateUserStateAction {
+export function updateUserState(newObject: UserState): UserActionTypes {
   return {
     type: UPDATE_USER_STATE,
     payload: newObject
   }
 }
 
-export function updateUserHistories(newObject: LooseState): UpdateUserHistoryAction {
+export function resetUser(): UserActionTypes{
   return {
-    type: UPDATE_USER_HISTORY,
-    payload: newObject.histories
+    type: RESET_USER
   }
 }

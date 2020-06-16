@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Input, AutoComplete, Form, Button, Spin, message } from 'antd';
 import CardBox from './layouts/cardBox'
 import { SearchOutlined, BankOutlined } from '@ant-design/icons';
-import { db } from '../firebase/config'
+import { db,auth } from '../firebase/config'
 import HistoryBox from "./layouts/historyBox"
 import { useDispatch, useSelector } from "react-redux"
 import { updateResults, clearResult } from "../store/data/actions"
 import withAuthentication from "../firebase/auth"
+import { resetUser } from "../store/user/actions";
 interface LooseObject {
   [key: string]: any
 }
@@ -222,6 +223,10 @@ const SearchComponent = () => {
     form.submit()
     //form.resetFields();
   }
+
+  const logOut =()=>{
+    auth.signOut().then(()=>dispatch(resetUser())).then(()=>dispatch(clearResult()))
+  }
   return (
     <div className="App__search perfect_scroll">
       <Spin tip="Loading..." spinning={loading} >
@@ -254,6 +259,9 @@ const SearchComponent = () => {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SearchOutlined style={{ fontSize: 16 }} />}></Button>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" onClick={logOut}  style={{margin: "0 3vw"}}>Logout</Button>
           </Form.Item>
         </Form>
         {Math.max(document.documentElement.clientWidth, window.innerWidth || 0) < 798 ? <HistoryBox loaded={loading} ListItemClick={HistoryClick} /> : undefined}

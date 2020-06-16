@@ -1,4 +1,4 @@
-import { UserState, UPDATE_USER_STATE, UPDATE_USER_HISTORY } from './types'
+import { UserState, UPDATE_USER_STATE, RESET_USER } from './types'
 
 const initialState = {
   logged_in: false,
@@ -16,15 +16,11 @@ export function userReducer(
       return {
         logged_in: action.payload.logged_in,
         userId: action.payload.userId,
-        histories: [...state.histories]
+        histories: action.payload.histories
       }
     }
-    case UPDATE_USER_HISTORY: {
-      return {
-        logged_in: state.logged_in,
-        userId: state.userId,
-        histories: action.payload
-      }
+    case RESET_USER: {
+      return initialState
     }
     default:
       return state
