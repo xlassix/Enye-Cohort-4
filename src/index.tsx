@@ -6,14 +6,20 @@ import { searchReducer} from './store/data/reducer'
 import {userReducer} from './store/user/reducer'
 import {Provider} from 'react-redux'
 import { createStore,combineReducers } from 'redux'
-
+import {loadState,saveState} from "./localstorage"
 
 const rootReducer = combineReducers({
   search: searchReducer,
   user:userReducer
 })
+const persistedState =loadState()
+const store = createStore(rootReducer,persistedState)
 
-const store = createStore(rootReducer)
+store.subscribe(()=>{
+   saveState({
+     user: store.getState().user
+   })
+})
 
 export type RootState = ReturnType<typeof rootReducer>
 

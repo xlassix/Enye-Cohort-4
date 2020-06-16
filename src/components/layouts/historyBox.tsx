@@ -4,7 +4,7 @@ import { DoubleLeftOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { useSelector } from "react-redux"
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import { updateUserHistories } from "../../store/user/actions"
+import { updateUserState} from "../../store/user/actions"
 
 const GET_HISTORIES = gql`
 query Histories($user :  String){
@@ -51,9 +51,9 @@ const arrowDown = (
 function HistoryBox({ ListItemClick, loaded }: Props) {
 
   //const [loading,setLoading]=useState<boolean>(false);
-  const { userId } = useSelector((state: LooseObject) => { return (state.user) })
+  const UserState = useSelector((state: LooseObject) => { return (state.user) })
   const { loading, error, data, refetch } = useQuery(GET_HISTORIES, {
-    variables: { user: userId },
+    variables: { user:UserState.userId },
   })
 
   //handle simple animation with css
@@ -70,7 +70,7 @@ function HistoryBox({ ListItemClick, loaded }: Props) {
   useEffect(() => {
     refetch()
     if (!loading){
-      updateUserHistories({userId:userId,histories:data.getHistories.reverse()})
+      updateUserState({...UserState,histories:data.getHistories.reverse()})
     }
   }, [loaded]);
 

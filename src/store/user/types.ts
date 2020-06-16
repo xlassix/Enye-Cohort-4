@@ -9,14 +9,13 @@ export interface UserState {
 }
 
 export const UPDATE_USER_STATE = 'UPDATE_USER_STATE'
-export const UPDATE_USER_HISTORY = 'UPDATE_USER_HISTORY'
+export const RESET_USER = 'RESET'
 
-export interface UpdateUserStateAction {
+ interface UpdateUserStateAction {
   type: typeof UPDATE_USER_STATE
   payload: LooseState
 }
-export interface UpdateUserHistoryAction {
-  type: typeof UPDATE_USER_HISTORY
-  payload: Array<object>
+ interface RestAction {
+  type: typeof RESET_USER
 }
-
+export type UserActionTypes = UpdateUserStateAction|RestAction
