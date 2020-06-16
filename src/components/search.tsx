@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, AutoComplete, Form, Button, Spin, message } from 'antd';
 import CardBox from './layouts/cardBox'
 import { SearchOutlined, BankOutlined } from '@ant-design/icons';
-import { db,auth } from '../firebase/config'
+import { db, auth } from '../firebase/config'
 import HistoryBox from "./layouts/historyBox"
 import { useDispatch, useSelector } from "react-redux"
 import { updateResults, clearResult } from "../store/data/actions"
@@ -57,7 +57,7 @@ const SearchComponent = () => {
   //initialise dispatcher
   const dispatch = useDispatch();
   const { results_loc, markers_loc } = useSelector((state: LooseObject) => { return (state.search) })
-  const { userId,histories } = useSelector((state: LooseObject) => { return (state.user) })
+  const { userId, histories } = useSelector((state: LooseObject) => { return (state.user) })
 
   //handle search in autocomplete field
   const handleSearch = (value: string) => {
@@ -71,7 +71,7 @@ const SearchComponent = () => {
   };
 
 
-
+  //the function sends query to javascript API, process and stores the response
   function findHospitals(position: any) {
 
     //get latitute and longitude
@@ -128,6 +128,7 @@ const SearchComponent = () => {
         }
       });
     });
+
     //Store entity Firebase
     db.collection("history").add({
       query: query_loc,
@@ -168,7 +169,7 @@ const SearchComponent = () => {
   }
 
 
-  //onCard Click
+  //handles the Click event of every card Component
   const mapClick = (id: String) => {
     var infoWindow = new window.google.maps.InfoWindow();
     if (infoWindow) {
@@ -196,7 +197,7 @@ const SearchComponent = () => {
     }
   }
 
-  //onForm Submit
+  //Handle the onSubmit event of search input form
   const handleSubmit = (values: LooseObject) => {
     dispatch(clearResult())
     setLoading(true)
@@ -224,8 +225,8 @@ const SearchComponent = () => {
     //form.resetFields();
   }
 
-  const logOut =()=>{
-    auth.signOut().then(()=>dispatch(resetUser())).then(()=>dispatch(clearResult()))
+  const logOut = () => {
+    auth.signOut().then(() => dispatch(resetUser())).then(() => dispatch(clearResult()))
   }
   return (
     <div className="App__search perfect_scroll">
@@ -261,7 +262,7 @@ const SearchComponent = () => {
             <Button type="primary" htmlType="submit" icon={<SearchOutlined style={{ fontSize: 16 }} />}></Button>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" onClick={logOut}  style={{margin: "0 3vw"}}>Logout</Button>
+            <Button type="primary" onClick={logOut} style={{ margin: "0 1vw" }}>Logout</Button>
           </Form.Item>
         </Form>
         {Math.max(document.documentElement.clientWidth, window.innerWidth || 0) < 798 ? <HistoryBox loaded={loading} ListItemClick={HistoryClick} /> : undefined}
