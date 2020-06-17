@@ -227,11 +227,9 @@ const SearchComponent = () => {
     form.submit()
     //form.resetFields();
   }
-
   return (
     <div className="App__search perfect_scroll">
       <Spin tip="Loading..." spinning={loading} >
-        <div>
           <Form onFinish={handleSubmit} name="form" form={form} className='search_form'>
             <Form.Item
               name="query"
@@ -266,7 +264,7 @@ const SearchComponent = () => {
               <Button type="primary" style={{ margin: "0 0.5vw" }}><Link to={SIGN_OUT} > Logout</Link></Button>
             </Form.Item>
           </Form>
-        </div>
+
         {Math.max(document.documentElement.clientWidth, window.innerWidth || 0) < 798 ? <HistoryBox loaded={loading} ListItemClick={HistoryClick} /> : undefined}
         <div className="Cards">
           {loading ? [<h2>{hospital} Finding health facilities near you.</h2>] :
