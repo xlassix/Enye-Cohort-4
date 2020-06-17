@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Input, AutoComplete, Form, Button, Spin, message } from 'antd';
 import CardBox from './layouts/cardBox'
 import { SearchOutlined, BankOutlined } from '@ant-design/icons';
-import { db, auth } from '../firebase/config'
+import { db} from '../firebase/config'
 import HistoryBox from "./layouts/historyBox"
 import { useDispatch, useSelector } from "react-redux"
 import { updateResults, clearResult } from "../store/data/actions"
 import withAuthentication from "../firebase/auth"
-import { resetUser } from "../store/user/actions";
+import {  Link } from "react-router-dom";
+import { SIGN_OUT } from "../routes/all";
 interface LooseObject {
   [key: string]: any
 }
@@ -156,12 +157,14 @@ const SearchComponent = () => {
         infoWindow.setContent(place.name)
         infoWindow.open(map, marker)
         map.setCenter(marker.getPosition());
+        map.setZoom(16)
       }
     })(marker));
     new window.google.maps.event.addListener(map, 'click', (function () {
       return function () {
         if (infoWindow) {
           infoWindow.close();
+          map.setZoom(15)
         }
       }
     })());
@@ -225,46 +228,45 @@ const SearchComponent = () => {
     //form.resetFields();
   }
 
-  const logOut = () => {
-    auth.signOut().then(() => dispatch(resetUser())).then(() => dispatch(clearResult()))
-  }
   return (
     <div className="App__search perfect_scroll">
       <Spin tip="Loading..." spinning={loading} >
-        <Form onFinish={handleSubmit} name="form" form={form} className='search_form'>
-          <Form.Item
-            name="query"
-            rules={[{ required: true, message: 'Please input Name' }]}
-            style={{ width: '48%', textAlign: "left" }}
-          >
-            <AutoComplete onSearch={handleSearch}
-              placeholder="Search for facilities"
-              onChange={handleChange}
+        <div>
+          <Form onFinish={handleSubmit} name="form" form={form} className='search_form'>
+            <Form.Item
+              name="query"
+              rules={[{ required: true, message: 'Enter search params' ,}]}
+              style={{ width: '45%', textAlign: "left" }}
             >
-              {result.map((value: string) => (
-                <Option key={value} value={value}>
-                  {value}
-                </Option>
-              ))}
-            </AutoComplete>
-          </Form.Item>
-          <Form.Item name="radius" rules={[{ required: true, message: 'Please input valid radius' }]} >
-            <Input
-              max={50000}
-              min={0}
-              onChange={handleChange}
-              type="number"
-              placeholder="radius"
-              suffix="m"
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" icon={<SearchOutlined style={{ fontSize: 16 }} />}></Button>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" onClick={logOut} style={{ margin: "0 1vw" }}>Logout</Button>
-          </Form.Item>
-        </Form>
+              <AutoComplete onSearch={handleSearch}
+                placeholder="Search for facilities"
+                onChange={handleChange}
+              >
+                {result.map((value: string) => (
+                  <Option key={value} value={value}>
+                    {value}
+                  </Option>
+                ))}
+              </AutoComplete>
+            </Form.Item>
+            <Form.Item name="radius" rules={[{ required: true, message: 'Invalid' }]} >
+              <Input
+                max={50000}
+                min={0}
+                onChange={handleChange}
+                type="number"
+                placeholder="radius"
+                suffix="m"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" icon={<SearchOutlined style={{ fontSize: 16 }} />}></Button>
+            </Form.Item>
+            <Form.Item >
+              <Button type="primary" style={{ margin: "0 0.5vw" }}><Link to={SIGN_OUT} > Logout</Link></Button>
+            </Form.Item>
+          </Form>
+        </div>
         {Math.max(document.documentElement.clientWidth, window.innerWidth || 0) < 798 ? <HistoryBox loaded={loading} ListItemClick={HistoryClick} /> : undefined}
         <div className="Cards">
           {loading ? [<h2>{hospital} Finding health facilities near you.</h2>] :
