@@ -24,7 +24,7 @@ interface LooseObject {
 }
 
 function CardBox({ data, CardClick }: Props) {
-  const items = [<h3> {hospital} Health facilities</h3>]
+  const items = [<h3> {hospital} {data.length} Health facilities found</h3>]
   for (const value in Object.keys(data)) {
     items.push(
       <div onClick={() => CardClick(data[value].id)} key={data[value].id}  >
