@@ -142,8 +142,8 @@ const SearchComponent = () => {
       .catch(function (err) {
         error("Error adding document: " + err)
       }).then(() => { setLoading(false) });
+      searchCount += 1;
   }
-  searchCount += 1;
   //createMarket
   function createMarker(place: any, map: any) {
     var infoWindow = new window.google.maps.InfoWindow();
@@ -227,9 +227,12 @@ const SearchComponent = () => {
     form.submit()
     //form.resetFields();
   }
+
   return (
     <div className="App__search perfect_scroll">
+      {console.log(searchCount)}
       <Spin tip="Loading..." spinning={loading} >
+        <div>
           <Form onFinish={handleSubmit} name="form" form={form} className='search_form'>
             <Form.Item
               name="query"
@@ -264,7 +267,7 @@ const SearchComponent = () => {
               <Button type="primary" style={{ margin: "0 0.5vw" }}><Link to={SIGN_OUT} > Logout</Link></Button>
             </Form.Item>
           </Form>
-
+        </div>
         {Math.max(document.documentElement.clientWidth, window.innerWidth || 0) < 798 ? <HistoryBox loaded={loading} ListItemClick={HistoryClick} /> : undefined}
         <div className="Cards">
           {loading ? [<h2>{hospital} Finding health facilities near you.</h2>] :
