@@ -38,6 +38,7 @@ const error = (info: string) => {
   message.error(info, 4);
 };
 
+var searchCount: number = 0;
 
 const SearchComponent = () => {
 
@@ -47,7 +48,6 @@ const SearchComponent = () => {
   const [radius_loc, setRadius] = useState<number>(0);
   const [query_loc, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  var searchCount: number = 0;
   var map: any;
   var markers: Array<LooseObject> = []
   var placesService: any;
@@ -137,12 +137,11 @@ const SearchComponent = () => {
       userId: userId
     })
       .then(function (docRef) {
-        success("written to firestore")
+        success("written to firestore");
       })
       .catch(function (err) {
         error("Error adding document: " + err)
       }).then(() => { setLoading(false) });
-      searchCount += 1;
   }
   //createMarket
   function createMarker(place: any, map: any) {
@@ -154,6 +153,9 @@ const SearchComponent = () => {
     });
     new window.google.maps.event.addListener(marker, 'click', (function (marker) {
       return function () {
+        if (infoWindow) {
+          infoWindow.close();
+        }
         infoWindow.setContent(place.name)
         infoWindow.open(map, marker)
         map.setCenter(marker.getPosition());
@@ -205,6 +207,7 @@ const SearchComponent = () => {
     dispatch(clearResult())
     setLoading(true)
     getLocation();
+    searchCount += 1
   };
 
   //Update form State values
@@ -230,7 +233,6 @@ const SearchComponent = () => {
 
   return (
     <div className="App__search perfect_scroll">
-      {console.log(searchCount)}
       <Spin tip="Loading..." spinning={loading} >
         <div>
           <Form onFinish={handleSubmit} name="form" form={form} className='search_form'>
